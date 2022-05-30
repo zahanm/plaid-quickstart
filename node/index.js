@@ -199,6 +199,23 @@ app.post('/api/set_access_token', function (request, response, next) {
     .catch(next);
 });
 
+// My hacky "set the access_token" flow -- ie, just give it the access token, and item_id
+app.post('/api/set_access_token_direct', function (request, response, next) {
+  Promise.resolve()
+    .then(async function () {
+      // NOTE: that PUBLIC_TOKEN is unset, but it doesn't appear to be used anywhere
+      // PUBLIC_TOKEN = request.body.public_token;
+      ACCESS_TOKEN = request.body.access_token;
+      ITEM_ID = request.body.item_id;
+      response.json({
+        access_token: ACCESS_TOKEN,
+        item_id: ITEM_ID,
+        error: null,
+      });
+    })
+    .catch(next);
+});
+
 // Retrieve ACH or ETF Auth data for an Item's accounts
 // https://plaid.com/docs/#auth
 app.get('/api/auth', function (request, response, next) {
