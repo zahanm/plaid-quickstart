@@ -28,6 +28,7 @@
 
 .linkButton {
   margin-top: 3 * $unit;
+  margin-bottom: 3 * $unit;
 }
 
 .itemAccessContainer {
@@ -68,4 +69,8 @@
 .requests {
   margin-top: 7 * $unit;
   font-size: 2 * $unit;
+}
+
+.inspectButton {
+  width: fit-content;
 }

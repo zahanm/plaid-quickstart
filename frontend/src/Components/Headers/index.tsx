@@ -7,6 +7,7 @@ import Link from "../Link";
 import Context from "../../Context";
 
 import styles from "./index.module.scss";
+import DirectAccess from "./DirectAccess";
 
 const Header = () => {
   const {
@@ -87,6 +88,8 @@ const Header = () => {
               <Link />
             </div>
           )}
+          <hr style={{ width: "100%" }}></hr>
+          <DirectAccess />
         </>
       ) : (
         <>
