@@ -6,6 +6,7 @@ import Items from "./Components/ProductTypes/Items";
 import Context from "./Context";
 
 import styles from "./App.module.scss";
+import UpdateLink from "./Components/ProductTypes/UpdateLink";
 
 const App = () => {
   const { linkSuccess, isItemAccess, dispatch } = useContext(Context);
@@ -17,9 +18,8 @@ const App = () => {
       return { paymentInitiation: false };
     }
     const data = await response.json();
-    const paymentInitiation: boolean = data.products.includes(
-      "payment_initiation"
-    );
+    const paymentInitiation: boolean =
+      data.products.includes("payment_initiation");
     dispatch({
       type: "SET_STATE",
       state: {
@@ -87,6 +87,7 @@ const App = () => {
           <>
             <Products />
             <Items />
+            <UpdateLink />
           </>
         )}
       </div>
