@@ -176,6 +176,34 @@ app.post(
   },
 );
 
+app.post(
+  '/api/create_link_token_for_update',
+  function (request, response, next) {
+    Promise.resolve()
+      .then(async function () {
+        const configs = {
+          user: {
+            // This should correspond to a unique id for the current user.
+            client_user_id: 'user-id',
+          },
+          client_name: 'Plaid Quickstart',
+          country_codes: PLAID_COUNTRY_CODES,
+          language: 'en',
+          access_token: request.data.access_token,
+        };
+
+        if (PLAID_REDIRECT_URI !== '') {
+          configs.redirect_uri = PLAID_REDIRECT_URI;
+        }
+
+        const createTokenResponse = await client.linkTokenCreate(configs);
+        prettyPrintResponse(createTokenResponse);
+        response.json(createTokenResponse.data);
+      })
+      .catch(next);
+  },
+);
+
 // Exchange token flow - exchange a Link public_token for
 // an API access_token
 // https://plaid.com/docs/#exchange-token-flow
