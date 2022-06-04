@@ -1,6 +1,8 @@
 'use strict';
 
-// read env vars from .env file
+//       vv
+// --==> read env vars from .env file <==--
+//       ^^
 require('dotenv').config();
 const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
 const util = require('util');
@@ -250,7 +252,7 @@ app.get('/api/transactions', function (request, response, next) {
           access_token: ACCESS_TOKEN,
           cursor: cursor,
         };
-        const response = await client.transactionsSync(request)
+        const response = await client.transactionsSync(request);
         const data = response.data;
         // Add this page of results
         added = added.concat(data.added);
@@ -262,10 +264,13 @@ app.get('/api/transactions', function (request, response, next) {
         prettyPrintResponse(response);
       }
 
-      const compareTxnsByDateAscending = (a, b) => (a.date > b.date) - (a.date < b.date);
+      const compareTxnsByDateAscending = (a, b) =>
+        (a.date > b.date) - (a.date < b.date);
       // Return the 8 most recent transactions
-      const recently_added = [...added].sort(compareTxnsByDateAscending).slice(-8);
-      response.json({latest_transactions: recently_added});
+      const recently_added = [...added]
+        .sort(compareTxnsByDateAscending)
+        .slice(-8);
+      response.json({ latest_transactions: recently_added });
     })
     .catch(next);
 });
@@ -475,17 +480,20 @@ app.get('/api/payment', function (request, response, next) {
 });
 
 //TO-DO: This endpoint will be deprecated in the near future
-app.get('/api/income/verification/paystubs', function (request, response, next) {
-  Promise.resolve()
-  .then(async function () {
-    const paystubsGetResponse = await client.incomeVerificationPaystubsGet({
-      access_token: ACCESS_TOKEN
-    });
-    prettyPrintResponse(paystubsGetResponse);
-    response.json({ error: null, paystubs: paystubsGetResponse.data})
-  })
-  .catch(next);
-})
+app.get(
+  '/api/income/verification/paystubs',
+  function (request, response, next) {
+    Promise.resolve()
+      .then(async function () {
+        const paystubsGetResponse = await client.incomeVerificationPaystubsGet({
+          access_token: ACCESS_TOKEN,
+        });
+        prettyPrintResponse(paystubsGetResponse);
+        response.json({ error: null, paystubs: paystubsGetResponse.data });
+      })
+      .catch(next);
+  },
+);
 
 app.use('/api', function (error, request, response, next) {
   prettyPrintResponse(error.response);
