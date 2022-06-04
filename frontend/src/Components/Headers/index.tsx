@@ -7,7 +7,7 @@ import Link from "../Link";
 import Context from "../../Context";
 
 import styles from "./index.module.scss";
-import DirectAccess from "./DirectAccess";
+import DirectAccess from "../Link/DirectAccess";
 
 const Header = () => {
   const {

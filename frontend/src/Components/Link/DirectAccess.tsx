@@ -2,7 +2,7 @@ import { Button, TextInput } from "plaid-threads";
 import React, { useContext, useState } from "react";
 import Context from "../../Context";
 
-import styles from "./index.module.scss";
+import styles from "../Headers/index.module.scss";
 
 const DirectAccess = () => {
   const [itemID, setItemID] = useState("");
