@@ -189,7 +189,7 @@ app.post(
           client_name: 'Plaid Quickstart',
           country_codes: PLAID_COUNTRY_CODES,
           language: 'en',
-          access_token: request.data.access_token,
+          access_token: request.body.access_token,
         };
 
         if (PLAID_REDIRECT_URI !== '') {
