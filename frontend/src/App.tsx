@@ -30,7 +30,7 @@ const App = () => {
   }, [dispatch]);
 
   const generateToken = useCallback(
-    async (paymentInitiation) => {
+    async (paymentInitiation: boolean) => {
       const path = paymentInitiation
         ? "/api/create_link_token_for_payment"
         : "/api/create_link_token";

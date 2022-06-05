@@ -196,6 +196,12 @@ app.post(
           configs.redirect_uri = PLAID_REDIRECT_URI;
         }
 
+        if (request.body.account_selection_enabled) {
+          configs.link_customization_name =
+            'account_selection_v2_customization';
+          configs.update = { account_selection_enabled: true };
+        }
+
         const createTokenResponse = await client.linkTokenCreate(configs);
         prettyPrintResponse(createTokenResponse);
         response.json(createTokenResponse.data);

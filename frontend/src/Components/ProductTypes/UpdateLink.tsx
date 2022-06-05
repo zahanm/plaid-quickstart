@@ -1,14 +1,16 @@
-import { Button } from "plaid-threads";
-import React, { useCallback, useContext, useEffect } from "react";
+import { Button, ButtonToggle } from "plaid-threads";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
+import { SelectGroupOptionsType } from "plaid-threads/SelectGroup";
 
 import Context from "../../Context";
 
 import ProductTypesContainer from "./ProductTypesContainer";
 import styles from "./index.module.scss";
-import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 
 const UpdateLink = () => {
   const { dispatch, accessToken, linkToken } = useContext(Context);
+  const [updateMode, setUpdateMode] = useState("credentials"); // 'accountSelection'
 
   useEffect(() => {
     const generateToken = async () => {
@@ -21,7 +23,9 @@ const UpdateLink = () => {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
         },
-        body: `access_token=${accessToken}`,
+        body: `access_token=${accessToken}&account_selection_enabled=${
+          updateMode === "accountSelection"
+        }`,
       });
       if (!response.ok) {
         dispatch({ type: "SET_STATE", state: { linkToken: null } });
@@ -44,7 +48,7 @@ const UpdateLink = () => {
       localStorage.setItem("link_token", data.link_token); //to use later for Oauth
     };
     generateToken();
-  }, [dispatch, accessToken]);
+  }, [dispatch, accessToken, updateMode]);
 
   const onSuccess = useCallback(
     (public_token: string) => {
@@ -55,35 +59,42 @@ const UpdateLink = () => {
     [dispatch]
   );
 
-  let isOauth = false;
   const config: PlaidLinkOptions = {
     token: linkToken,
     onSuccess,
   };
 
-  if (window.location.href.includes("?oauth_state_id=")) {
-    // TODO: figure out how to delete this ts-ignore
-    // @ts-ignore
-    config.receivedRedirectUri = window.location.href;
-    isOauth = true;
-    console.log("Returned from Oauth flow", isOauth);
-  }
-
   const { open } = usePlaidLink(config);
+
+  const buttonOptions: Record<string, SelectGroupOptionsType> = {
+    credentials: {
+      label: "Expired Credentials",
+      value: "credentials",
+    },
+    accountSelection: {
+      label: "Account Selection",
+      value: "accountSelection",
+    },
+  };
 
   return (
     <>
       <ProductTypesContainer productType="Update Item">
-        <p>If your credentials are expired, you can refresh them here.</p>
+        <p>Select the reason to update this Item, and then launch Link.</p>
+        <ButtonToggle
+          className={styles.updateButton}
+          value={buttonOptions[updateMode]}
+          options={Object.values(buttonOptions)}
+          onChange={(value) =>
+            setUpdateMode(
+              updateMode === "accountSelection"
+                ? "credentials"
+                : "accountSelection"
+            )
+          }
+        />
         <Button className={styles.updateButton} onClick={() => open()}>
-          Update Credentials
-        </Button>
-        <p>
-          Or if you need to select a different set of accounts for this login,
-          that starts here.
-        </p>
-        <Button className={styles.updateButton} onClick={() => open()}>
-          Update Accounts
+          Update Link
         </Button>
       </ProductTypesContainer>
     </>
